@@ -1,1 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PenGuard AI — Cybersecurity for Every Business</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --black: #080C10;
+      --panel: #0D1117;
+      --border: #1E2A38;
+      --accent: #00FFB2;
+      --accent-dim: rgba(0,255,178,0.12);
+      --text: #CBD5E1;
+      --white: #F0F6FF;
+      --mono: 'Share Tech Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,178,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,178,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .logo span { color: var(--white); }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: var(--black) !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: 4px;
+      font-weight: 700 !important;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 1.5rem 4rem;
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 800px;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.125rem;
+      color: var(--text);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--black);
+      padding: 0.85rem 2rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    /* ── TERMINAL TICKER ── */
+    .ticker {
+      margin-top: 4rem;
+      width: 100%;
+      max-width: 700px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .ticker-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #FF5F57; }
+    .dot-y { background: #FEBC2E; }
+    .dot-g { background: #28C840; }
+
+    .ticker-line { margin-top: 0.35rem; }
+    .ticker-line .label { color: #4A5568; margin-right: 0.5rem; }
+
+    /* ── SECTION BASE ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-intro {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 580px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+
+    /* ── SERVICES ── */
+    #services { border-top: 1px solid var(--border); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+
+    .service-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .service-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-card p {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .service-price {
+      margin-top: 1.25rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how { border-top: 1px solid var(--border); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      counter-reset: steps;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border);
+      transition: border-color 0.2s;
+    }
+
+    .step:hover { border-color: var(--accent); }
+
+    .step-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .step p {
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 680px) {
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    .about-badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 0.3rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .about-text p {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat {
+      background: var(--black);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+    }
+
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      color: var(--accent);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    /* ── CTA ── */
+    #contact {
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .cta-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3.5rem 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-box h2 { margin-bottom: 0.75rem; }
+
+    .cta-box p {
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      background: var(--black);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      width: 100%;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--accent); }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: #4A5568; }
+
+    .contact-form textarea { height: 100px; resize: vertical; }
+
+    .contact-form button {
+      background: var(--accent);
+      color: var(--black);
+      border: none;
+      border-radius: 4px;
+      padding: 0.85rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+    }
+
+    .contact-form button:hover { opacity: 0.85; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: #4A5568;
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      nav .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Pen<span>Guard</span> AI</div>
+    <div class="nav-links" style="display:flex;gap:2rem;align-items:center;">
+      <a href="#services">Services</a>
+      <a href="#how">How It Works</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="nav-cta">Get Free Audit</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">// AI-Powered Cybersecurity</div>
+    <h1>Your Business Deserves <em>Real Protection</em></h1>
+    <p class="hero-sub">PenGuard AI combines artificial intelligence with hands-on security expertise to protect small businesses and startups from modern cyber threats — starting with a free audit.</p>
+    <div class="btn-group">
+      <a href="#contact" class="btn-primary">Get Your Free Audit</a>
+      <a href="#services" class="btn-secondary">See What We Do</a>
+    </div>
+    <div class="ticker">
+      <div class="ticker-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span style="font-size:0.7rem;color:#4A5568;margin-left:0.5rem;">penguard_ai — threat_monitor.sh</span>
+      </div>
+      <div class="ticker-line"><span class="label">[INFO]</span> Scanning for open vulnerabilities...</div>
+      <div class="ticker-line"><span class="label">[WARN]</span> 43% of small businesses have no incident response plan</div>
+      <div class="ticker-line"><span class="label">[WARN]</span> Average cost of a data breach: $4.45M (IBM, 2023)</div>
+      <div class="ticker-line"><span class="label">[OK]&nbsp;&nbsp;</span> PenGuard AI monitoring active — your business is next</div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-tag">// What We Offer</div>
+      <h2>Security Built for the Real World</h2>
+      <p class="section-intro">No jargon. No bloated contracts. Just practical cybersecurity tailored to your business size and budget.</p>
+      <div class="services-grid reveal">
+        <div class="service-card">
+          <div class="service-icon">🤖</div>
+          <h3>AI Security Chatbot</h3>
+          <p>24/7 AI assistant that answers your cybersecurity questions, flags suspicious activity patterns, and guides your team on best practices — instantly.</p>
+          <div class="service-price">→ Free to try</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔍</div>
+          <h3>Cybersecurity Audit</h3>
+          <p>A full review of your business's digital security posture — passwords, network, software, employee practices — with a clear action plan delivered in 48 hours.</p>
+          <div class="service-price">→ Starting at $150</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🛡️</div>
+          <h3>Security Action Plan</h3>
+          <p>After your audit, we build a step-by-step remediation roadmap your team can actually follow — prioritized by risk level and business impact.</p>
+          <div class="service-price">→ Included with audit</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📋</div>
+          <h3>Policy & Compliance Help</h3>
+          <p>Need a password policy? Acceptable use policy? We draft AI-assisted security documentation tailored to your industry and team size.</p>
+          <div class="service-price">→ Starting at $99</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <div class="section-tag">// The Process</div>
+      <h2>From Zero to Secure in 4 Steps</h2>
+      <p class="section-intro">We make getting protected as simple as possible — no technical knowledge required on your end.</p>
+      <div class="steps reveal">
+        <div class="step">
+          <div class="step-num">STEP 01</div>
+          <h3>Book Free Audit</h3>
+          <p>Fill out the form below. We'll reach out within 24 hours to schedule your free security assessment call.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">STEP 02</div>
+          <h3>We Assess</h3>
+          <p>Using AI-powered tools and expert review, we scan your digital footprint for vulnerabilities, gaps, and risks.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">STEP 03</div>
+          <h3>You Get a Report</h3>
+          <p>A clear, jargon-free report lands in your inbox within 48 hours — with every risk rated by severity and fix priority.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">STEP 04</div>
+          <h3>We Fix It Together</h3>
+          <p>We guide your team through every fix, or handle it ourselves — your choice. No technical background needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-text reveal">
+          <div class="about-badge">// Who We Are</div>
+          <h2>Cybersecurity Expertise Meets AI Efficiency</h2>
+          <p>PenGuard AI was founded by a cybersecurity professional with a Bachelor's degree from Saint John's University in Queens, NY — built on the belief that every business, not just enterprises, deserves serious protection.</p>
+          <p>We use AI to do the heavy lifting — faster threat detection, smarter reporting, lower cost — so you get enterprise-grade security without the enterprise price tag.</p>
+          <a href="#contact" class="btn-primary" style="display:inline-block;margin-top:1rem;">Work With Us</a>
+        </div>
+        <div class="about-stats reveal">
+          <div class="stat">
+            <div class="stat-num">43%</div>
+            <div class="stat-label">of cyberattacks target small businesses</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">72hr</div>
+            <div class="stat-label">average time to detect a breach</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">$4.45M</div>
+            <div class="stat-label">average cost of a data breach</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">AI assistant always on guard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="cta-box reveal">
+        <div class="section-tag" style="text-align:center;">// Get Started</div>
+        <h2>Get Your Free Security Audit</h2>
+        <p>Tell us a little about your business and we'll be in touch within 24 hours to schedule your free audit call — no obligation, no credit card.</p>
+        <div class="contact-form">
+          <input type="text" placeholder="Your Name" />
+          <input type="text" placeholder="Business Name" />
+          <input type="email" placeholder="Email Address" />
+          <textarea placeholder="What is your biggest security concern? (optional)"></textarea>
+          <button type="button">Request Free Audit →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 <span>PenGuard AI</span> — Cybersecurity for Every Business. Built in Queens, NY.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
+
+</body>
+</html>
